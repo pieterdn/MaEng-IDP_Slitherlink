@@ -1,1 +1,43 @@
+vocabulary V {
+    // Types
+    type cel_column     // Column of a cell
+    type cel_row        // Row of a cell
+    type point_column   // Column of a point, amount = amount of cel cols + 1
+    type point_row      // Row of a point, amount = amount of cel rows + 1
+    
+    // Cels
+    Value: (cel_column * cel_row) → Int
+    n_cel: (cel_column * cel_row * cel_column * cel_row) → Bool
+    e_cel: (cel_column * cel_row * cel_column * cel_row) → Bool
+    w_cel: (cel_column * cel_row * cel_column * cel_row) → Bool
+    s_cel: (cel_column * cel_row * cel_column * cel_row) → Bool
+    nw_cp: (cel_column * cel_row * point_column * point_row) → Bool
+    ne_cp: (cel_column * cel_row * point_column * point_row) → Bool
+    sw_cp: (cel_column * cel_row * point_column * point_row) → Bool
+    se_cp: (cel_column * cel_row * point_column * point_row) → Bool
+    
+    // Points
+    n_point: (point_column * point_row * point_column * point_row) → Bool
+    e_point: (point_column * point_row * point_column * point_row) → Bool
+    s_point: (point_column * point_row * point_column * point_row) → Bool
+    w_point: (point_column * point_row * point_column * point_row) → Bool
+    nw_pc: (point_column * point_row * cel_column * cel_row) → Bool
+    ne_pc: (point_column * point_row * cel_column * cel_row) → Bool
+    sw_pc: (point_column * point_row * cel_column * cel_row) → Bool
+    se_pc: (point_column * point_row * cel_column * cel_row) → Bool
 
+    // Lines
+    line: (point_column * point_row) → Bool
+}
+
+theory T:V {
+    
+}
+
+structure S:V {
+
+}
+
+procedure main() {
+    pretty_print(model_expand(T, S))
+}
