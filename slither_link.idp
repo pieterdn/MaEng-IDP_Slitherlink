@@ -52,11 +52,11 @@ theory T:V {
     !x, x2 in point_column: !y, y2 in point_row: ~neighbor_point(x, y, x2, y2) => ~line(x, y, x2, y2).
     
     // Out of every point starts 0 or 2 lines 
-    !x in point_column: !y in point_row: (#{x2 in point_column, y2 in point_row: line(x, y, x2, y2)} = 0) | (#{x2 in point_column, y2 in point_row: line(x, y, x2, y2)} = 2).
+    !x in point_column: !y in point_row: 
+        (#{x2 in point_column, y2 in point_row: line(x, y, x2, y2)} + #{x2 in point_column, y2 in point_row: line(x2, y2, x, y)} = 0) | 
+        (#{x2 in point_column, y2 in point_row: line(x, y, x2, y2)} + #{x2 in point_column, y2 in point_row: line(x2, y2, x, y)} = 2).
 
     // Every cell value is the sum of the surrounding lines
-    // !x in cell_column: !y in cell_row: Value(x,y) = #{line(ctop_column(x), ctop_row(y), ctop_column(x)+1, ctop_row(y))} + #{line(ctop_column(x), ctop_row(y), ctop_column(x), ctop_row(y)+1)} + #{line(ctop_column(x)+1, ctop_row(y), ctop_column(x)+1, ctop_row(y)+1)} + #{line(ctop_column(x), ctop_row(y)+1, ctop_column(x)+1, ctop_row(y)+1)} + #{line(ctop_column(x)+1, ctop_row(y), ctop_column(x), ctop_row(y))} + #{line(ctop_column(x), ctop_row(y)+1, ctop_column(x), ctop_row(y))} + #{line(ctop_column(x)+1, ctop_row(y)+1, ctop_column(x)+1, ctop_row(y))} + #{line(ctop_column(x)+1, ctop_row(y)+1, ctop_column(x), ctop_row(y)+1)}.
-
     !x in cell_column: !y in cell_row: Value(x,y) = -1 | Value(x,y) = (#{x1, x2 in point_column, y1, y2 in point_row: cell_point(x,y,x1,y1) & cell_point(x,y,x2,y2) & line(x1,y1,x2,y2)}).
 
     // !x, x2 in cell_column: !y, y2 in cell_row: Value(x, y) = #{x3 in point_column, y3 in point_row: line(x3, y3, x, y)} + #{x3 in point_column, y3 in point_row: line(x3, y3, x2, y2)} + #{x3 in point_column, y3 in point_row: line(x3, y3, x, y2)} + #{x3 in point_column, y3 in point_row: line(x3, y3, x2, y)}.
