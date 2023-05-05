@@ -59,6 +59,11 @@ theory T:V {
     // Every cell value is the sum of the surrounding lines
     !x in cell_column: !y in cell_row: Value(x,y) = -1 | Value(x,y) = (#{x1, x2 in point_column, y1, y2 in point_row: cell_point(x,y,x1,y1) & cell_point(x,y,x2,y2) & line(x1,y1,x2,y2)}).
 
+    // A line can only be drawn between in one direction
+    !x, x2 in point_column: !y, y2 in point_row: line(x, y, x2, y2) => ~line(x2, y2, x, y).
+
+    !x1, x2 in point_column: !y1, y2 in point_row: ?x3 in point_column: ?y3 in point_row: line(x1, y1, x2, y2) => line(x2, y2, x3, y3).
+
     // [] 1. De lijnen moeten 1 doorlopende, niet kruisende kring vormen.
     //      [X] - Uit elk punt start geen of 2 lijnen (Zorgt voor geen kruisingen) 
     // [X] 2. De value van elke cel komt overeen met het aantal omringende lijnen.
