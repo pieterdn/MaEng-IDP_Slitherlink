@@ -5,7 +5,7 @@ vocabulary V {
     type point_column       // Column of a point, amount = amount of cell cols + 1
     type point_row          // Row of a point, amount = amount of cell rows + 1
     type cell_value         // Possible cell values
-    
+
     // cells
     Value: (cell_column * cell_row) -> cell_value
     n_cell: (cell_column * cell_row * cell_column * cell_row) -> Bool
@@ -55,7 +55,9 @@ theory T:V {
     !x in point_column: !y in point_row: (#{x2 in point_column, y2 in point_row: line(x, y, x2, y2)} = 0) | (#{x2 in point_column, y2 in point_row: line(x, y, x2, y2)} = 2).
 
     // Every cell value is the sum of the surrounding lines
-    //!x in cell_column: !y in cell_row: Value(x,y) = #{line(x, y, x+1, y)} + #{line(x, y, x, y+1)} + #{line(x+1, y, x+1, y+1)} + #{line(x, y+1, x+1, y+1)} + #{line(x+1, y, x, y)} + #{line(x, y+1, x, y)} + #{line(x+1, y+1, x+1, y)} + #{line(x+1, y+1, x, y+1)}.
+    // !x in cell_column: !y in cell_row: Value(x,y) = #{line(ctop_column(x), ctop_row(y), ctop_column(x)+1, ctop_row(y))} + #{line(ctop_column(x), ctop_row(y), ctop_column(x), ctop_row(y)+1)} + #{line(ctop_column(x)+1, ctop_row(y), ctop_column(x)+1, ctop_row(y)+1)} + #{line(ctop_column(x), ctop_row(y)+1, ctop_column(x)+1, ctop_row(y)+1)} + #{line(ctop_column(x)+1, ctop_row(y), ctop_column(x), ctop_row(y))} + #{line(ctop_column(x), ctop_row(y)+1, ctop_column(x), ctop_row(y))} + #{line(ctop_column(x)+1, ctop_row(y)+1, ctop_column(x)+1, ctop_row(y))} + #{line(ctop_column(x)+1, ctop_row(y)+1, ctop_column(x), ctop_row(y)+1)}.
+
+    !x in cell_column: !y in cell_row: Value(x,y) = -1 | Value(x,y) = (#{x1, x2 in point_column, y1, y2 in point_row: cell_point(x,y,x1,y1) & cell_point(x,y,x2,y2) & line(x1,y1,x2,y2)}).
 
     // !x, x2 in cell_column: !y, y2 in cell_row: Value(x, y) = #{x3 in point_column, y3 in point_row: line(x3, y3, x, y)} + #{x3 in point_column, y3 in point_row: line(x3, y3, x2, y2)} + #{x3 in point_column, y3 in point_row: line(x3, y3, x, y2)} + #{x3 in point_column, y3 in point_row: line(x3, y3, x2, y)}.
 
@@ -82,7 +84,7 @@ structure S:V {
     point_row := {1, 2, 3, 4}.
     cell_value := {-1, 0, 1, 2, 3}.
     Value := {(1, 1) -> 0, (2, 1) -> 2, (3, 1) -> 3, (2, 2) -> 2, (2, 3) -> 1, (3, 3) -> 2} else -1.
-    
+
     // cell relations, how one cell lies in relation to another
     n_cell := {(1, 2, 1, 1), (1, 3, 1, 2), (2, 2, 2, 1), (2, 3, 2, 2), (3, 2, 3, 1), (3, 3, 3, 2)}.
     e_cell := {(1, 1, 2, 1), (1, 2, 2, 2), (1, 3, 2, 3), (2, 1, 3, 1), (2, 2, 3, 2), (2, 3, 3, 3)}.
