@@ -51,7 +51,7 @@ theory T:V {
     // Eliminates lines between not neighboring points
     !x, x2 in point_column: !y, y2 in point_row: ~neighbor_point(x, y, x2, y2) => ~line(x, y, x2, y2).
     
-    // Out of every point starts 0 or 2 lines 
+    // Out of every point starts/ends 0 or 2 lines 
     !x in point_column: !y in point_row: 
         (#{x2 in point_column, y2 in point_row: line(x, y, x2, y2)} + #{x2 in point_column, y2 in point_row: line(x2, y2, x, y)} = 0) | 
         (#{x2 in point_column, y2 in point_row: line(x, y, x2, y2)} + #{x2 in point_column, y2 in point_row: line(x2, y2, x, y)} = 2).
@@ -59,9 +59,10 @@ theory T:V {
     // Every cell value is the sum of the surrounding lines
     !x in cell_column: !y in cell_row: Value(x,y) = -1 | Value(x,y) = (#{x1, x2 in point_column, y1, y2 in point_row: cell_point(x,y,x1,y1) & cell_point(x,y,x2,y2) & line(x1,y1,x2,y2)}).
 
-    // A line can only be drawn between in one direction
+    // A line can only be drawn between points in one direction
     !x, x2 in point_column: !y, y2 in point_row: line(x, y, x2, y2) => ~line(x2, y2, x, y).
 
+    // The loop has to go in one direction
     !x1, x2 in point_column: !y1, y2 in point_row: ?x3 in point_column: ?y3 in point_row: line(x1, y1, x2, y2) => line(x2, y2, x3, y3).
 
     // [] 1. De lijnen moeten 1 doorlopende, niet kruisende kring vormen.
