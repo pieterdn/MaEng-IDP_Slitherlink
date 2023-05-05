@@ -1,67 +1,69 @@
 vocabulary V {
     // Types
-    type cel_column     // Column of a cell
-    type cel_row        // Row of a cell
-    type point_column   // Column of a point, amount = amount of cel cols + 1
-    type point_row      // Row of a point, amount = amount of cel rows + 1
-    type cel_value      // Possible cel values
+    type cell_column     // Column of a cell
+    type cell_row        // Row of a cell
+    type point_column   // Column of a point, amount = amount of cell cols + 1
+    type point_row      // Row of a point, amount = amount of cell rows + 1
+    type cell_value      // Possible cell values
     
-    // Cels
-    Value: (cel_column * cel_row) → cel_value
-    n_cel: (cel_column * cel_row * cel_column * cel_row) → Bool
-    e_cel: (cel_column * cel_row * cel_column * cel_row) → Bool
-    w_cel: (cel_column * cel_row * cel_column * cel_row) → Bool
-    s_cel: (cel_column * cel_row * cel_column * cel_row) → Bool
-    nw_cp: (cel_column * cel_row * point_column * point_row) → Bool
-    ne_cp: (cel_column * cel_row * point_column * point_row) → Bool
-    sw_cp: (cel_column * cel_row * point_column * point_row) → Bool
-    se_cp: (cel_column * cel_row * point_column * point_row) → Bool
+    // cells
+    Value: (cell_column * cell_row) → cell_value
+    n_cell: (cell_column * cell_row * cell_column * cell_row) → Bool
+    e_cell: (cell_column * cell_row * cell_column * cell_row) → Bool
+    w_cell: (cell_column * cell_row * cell_column * cell_row) → Bool
+    s_cell: (cell_column * cell_row * cell_column * cell_row) → Bool
+    nw_cp: (cell_column * cell_row * point_column * point_row) → Bool
+    ne_cp: (cell_column * cell_row * point_column * point_row) → Bool
+    sw_cp: (cell_column * cell_row * point_column * point_row) → Bool
+    se_cp: (cell_column * cell_row * point_column * point_row) → Bool
     
     // Points
     n_point: (point_column * point_row * point_column * point_row) → Bool
     e_point: (point_column * point_row * point_column * point_row) → Bool
     s_point: (point_column * point_row * point_column * point_row) → Bool
     w_point: (point_column * point_row * point_column * point_row) → Bool
-    nw_pc: (point_column * point_row * cel_column * cel_row) → Bool
-    ne_pc: (point_column * point_row * cel_column * cel_row) → Bool
-    sw_pc: (point_column * point_row * cel_column * cel_row) → Bool
-    se_pc: (point_column * point_row * cel_column * cel_row) → Bool
+    nw_pc: (point_column * point_row * cell_column * cell_row) → Bool
+    ne_pc: (point_column * point_row * cell_column * cell_row) → Bool
+    sw_pc: (point_column * point_row * cell_column * cell_row) → Bool
+    se_pc: (point_column * point_row * cell_column * cell_row) → Bool
 
     // Lines
     line: (point_column * point_row * point_column * point_row) → Bool
 }
 
 theory T:V {
-    
+    !cols in cell_column: !rows in cell_row: (Value(cols, rows) ~= -1) => #{colsp1, colsp2 in point_column: !rowsp1, rowsp2 in point_row: (nw_cp(cols, rows, colsp1, rowsp1) & ne_cp(cols, rows, colsp2, rowsp2)) | (ne_cp(cols, rows, colsp1, rowsp1) & se_cp(cols, rows, colsp2, rowsp2)) | (se_cp(cols, rows, colsp1, rowsp1) & sw_cp(cols, rows, colsp2, rowsp2)) | (sw_cp(cols, rows, colsp1, rowsp1) & nw_cp(cols, rows, colsp2, rowsp2)) => line(colsp1, rowsp1, colsp2, rowsp2)} = (Value(cols, rows)). 
+    // itereer door alle punten 2 keer, indien twee punten rond deze cell, kijk of er een lijn is tussen twee punten
 }
 
 structure S:V {
-    cel_column := {1, 2, 3}.
-    cel_row := {1, 2, 3}.
+    // 3 by 3 Slitherlink
+    cell_column := {1, 2, 3}.
+    cell_row := {1, 2, 3}.
     point_column := {1, 2, 3, 4}.
     point_row := {1, 2, 3, 4}.
-    cel_value := {-1, 0, 1, 2, 3}.
+    cell_value := {-1, 0, 1, 2, 3}.
     Value := {(1, 1) → 0, (2, 1) → 2, (3, 1) → 3, (2, 2) → 2, (2, 3) → 1, (3, 3) → 2} else -1.
     
-    // Cel relations
-    n_cel := {(1, 2, 1, 1), (1, 3, 1, 2), (2, 2, 2, 1), (2, 3, 2, 2), (3, 2, 3, 1), (3, 3, 3, 2)}.
-    e_cel := {(1, 1, 2, 1), (1, 2, 2, 2), (1, 3, 2, 3), (2, 1, 3, 1), (2, 2, 3, 2), (2, 3, 3, 3)}.
-    s_cel := {(1, 1, 1, 2), (1, 2, 1, 3), (2, 1, 2, 2), (2, 2, 2, 3), (3, 1, 3, 2), (3, 2, 3, 3)}.
-    w_cel := {(2, 1, 1, 1), (2, 2, 1, 2), (2, 3, 1, 3), (3, 1, 2, 1), (3, 2, 2, 2), (3, 3, 2, 3)}.
+    // cell relations, how one cell lies in relation to another
+    n_cell := {(1, 2, 1, 1), (1, 3, 1, 2), (2, 2, 2, 1), (2, 3, 2, 2), (3, 2, 3, 1), (3, 3, 3, 2)}.
+    e_cell := {(1, 1, 2, 1), (1, 2, 2, 2), (1, 3, 2, 3), (2, 1, 3, 1), (2, 2, 3, 2), (2, 3, 3, 3)}.
+    s_cell := {(1, 1, 1, 2), (1, 2, 1, 3), (2, 1, 2, 2), (2, 2, 2, 3), (3, 1, 3, 2), (3, 2, 3, 3)}.
+    w_cell := {(2, 1, 1, 1), (2, 2, 1, 2), (2, 3, 1, 3), (3, 1, 2, 1), (3, 2, 2, 2), (3, 3, 2, 3)}.
 
-    // Point relations
+    // Point relations, how one point lies in relation to another
     n_point := {(1, 2, 1, 1), (2, 2, 2, 1), (3, 2, 3, 1), (4, 2, 4, 1), (1, 3, 1, 2), (2, 3, 2, 2), (3, 3, 3, 2), (4, 3, 4, 2), (1, 4, 1, 3), (2, 4, 2, 3), (3, 4, 3, 3), (4, 4, 4, 3)}.
     e_point := {(1, 1, 2, 1), (2, 1, 3, 1), (3, 1, 4, 1), (1, 2, 2, 2), (2, 2, 3, 2), (3, 2, 4, 2), (1, 3, 2, 3), (2, 3, 3, 3), (3, 3, 4, 3), (1, 4, 2, 4), (2, 4, 3, 4), (3, 4, 4, 4)}.
     s_point := {(1, 1, 1, 2), (2, 1, 2, 2), (3, 1, 3, 2), (4, 1, 4, 2), (1, 2, 1, 3), (2, 2, 2, 3), (3, 2, 3, 3), (4, 2, 4, 3), (1, 3, 1, 4), (2, 3, 2, 4), (3, 3, 3, 4), (4, 3, 4, 4)}.
     w_point := {(2, 1, 1, 1), (3, 1, 2, 1), (4, 1, 3, 1), (2, 2, 1, 2), (3, 2, 2, 2), (4, 2, 3, 2), (2, 3, 1, 3), (3, 3, 2, 3), (4, 3, 3, 3), (2, 4, 1, 4), (3, 4, 2, 4), (4, 4, 3, 4)}.
 
-    // Point to cel relations
+    // Point to cell relations, how a point lies in relation to a cell
     nw_cp := {(1, 1, 1, 1), (2, 1, 2, 1), (3, 1, 3, 1), (1, 2, 1, 2), (2, 2, 2, 2), (3, 2, 3, 2), (1, 3, 1, 3), (2, 3, 2, 3), (3, 3, 3, 3)}.
     ne_cp := {(1, 1, 2, 1), (2, 1, 3, 1), (3, 1, 4, 1), (1, 2, 2, 2), (2, 2, 3, 2), (3, 2, 4, 2), (1, 3, 2, 3), (2, 3, 3, 3), (3, 3, 4, 3)}.
     sw_cp := {(1, 1, 1, 2), (2, 1, 2, 2), (3, 1, 3, 2), (1, 2, 1, 3), (2, 2, 2, 3), (3, 2, 3, 3), (1, 3, 1, 4), (2, 3, 2, 4), (3, 3, 3, 4)}.
     se_cp := {(1, 1, 2, 2), (2, 1, 3, 2), (3, 1, 4, 2), (1, 2, 2, 3), (2, 2, 3, 3), (3, 2, 4, 3), (1, 3, 2, 4), (2, 3, 3, 4), (3, 3, 4, 4)}.
 
-    // Cel to point relations
+    // cell to point relations, how a cell lies in relation to a point
     nw_pc := {(2, 2, 1, 1), (3, 2, 2, 1), (4, 2, 3, 1), (2, 3, 1, 2), (3, 3, 2, 2), (4, 3, 3, 2), (2, 4, 1, 3), (3, 4, 2, 3), (4, 4, 3, 3)}.
     ne_pc := {(1, 2, 1, 1), (2, 2, 2, 1), (3, 2, 3, 1), (1, 3, 1, 2), (2, 3, 2, 2), (3, 3, 3, 2), (1, 4, 1, 3), (2, 4, 2, 3), (3, 4, 3, 3)}.
     sw_pc := {(2, 1, 1, 1), (3, 1, 2, 1), (4, 1, 3, 1), (2, 2, 1, 2), (3, 2, 2, 2), (4, 2, 3, 2), (2, 3, 1, 3), (3, 3, 2, 3), (4, 3, 3, 3)}.
