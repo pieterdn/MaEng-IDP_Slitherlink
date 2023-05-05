@@ -14,6 +14,7 @@ vocabulary V {
     s_cell: (cell_column * cell_row * cell_column * cell_row) -> Bool
 
     neighbor_cell: (cell_column * cell_row * cell_column * cell_row) -> Bool
+    cell_point: (cell_column * cell_row * point_column * point_row) -> Bool
 
     nw_cp: (cell_column * cell_row * point_column * point_row) -> Bool
     ne_cp: (cell_column * cell_row * point_column * point_row) -> Bool
@@ -43,12 +44,20 @@ theory T:V {
     
     // Defines neighboring points
     !x, x2 in point_column: !y, y2 in point_row: n_point(x, y, x2, y2) | e_point(x, y, x2, y2) | s_point(x, y, x2, y2) | w_point(x, y, x2, y2) <=> neighbor_point(x, y, x2, y2).
+
+    // Defines which points are part of which cells
+    !x in cell_column: !y in cell_row: !x2 in point_column: !y2 in point_row: nw_cp(x, y, x2, y2) | ne_cp(x, y, x2, y2) | sw_cp(x, y, x2, y2) | se_cp(x, y, x2, y2) <=> cell_point(x, y, x2, y2).
     
     // Eliminates lines between not neighboring points
     !x, x2 in point_column: !y, y2 in point_row: ~neighbor_point(x, y, x2, y2) => ~line(x, y, x2, y2).
     
     // Out of every point starts 0 or 2 lines 
     !x in point_column: !y in point_row: (#{x2 in point_column, y2 in point_row: line(x, y, x2, y2)} = 0) | (#{x2 in point_column, y2 in point_row: line(x, y, x2, y2)} = 2).
+
+    // Every cell value is the sum of the surrounding lines
+    //!x in cell_column: !y in cell_row: Value(x,y) = #{line(x, y, x+1, y)} + #{line(x, y, x, y+1)} + #{line(x+1, y, x+1, y+1)} + #{line(x, y+1, x+1, y+1)} + #{line(x+1, y, x, y)} + #{line(x, y+1, x, y)} + #{line(x+1, y+1, x+1, y)} + #{line(x+1, y+1, x, y+1)}.
+
+    // !x, x2 in cell_column: !y, y2 in cell_row: Value(x, y) = #{x3 in point_column, y3 in point_row: line(x3, y3, x, y)} + #{x3 in point_column, y3 in point_row: line(x3, y3, x2, y2)} + #{x3 in point_column, y3 in point_row: line(x3, y3, x, y2)} + #{x3 in point_column, y3 in point_row: line(x3, y3, x2, y)}.
 
     // [] 1. De lijnen moeten 1 doorlopende, niet kruisende kring vormen.
     //      [X] - Uit elk punt start geen of 2 lijnen (Zorgt voor geen kruisingen) 
