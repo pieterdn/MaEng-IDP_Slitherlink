@@ -7,36 +7,42 @@ vocabulary V {
     type cell_value         // Possible cell values
     
     // cells
-    Value: (cell_column * cell_row) → cell_value
-    n_cell: (cell_column * cell_row * cell_column * cell_row) → Bool
-    e_cell: (cell_column * cell_row * cell_column * cell_row) → Bool
-    w_cell: (cell_column * cell_row * cell_column * cell_row) → Bool
-    s_cell: (cell_column * cell_row * cell_column * cell_row) → Bool
-    nw_cp: (cell_column * cell_row * point_column * point_row) → Bool
-    ne_cp: (cell_column * cell_row * point_column * point_row) → Bool
-    sw_cp: (cell_column * cell_row * point_column * point_row) → Bool
-    se_cp: (cell_column * cell_row * point_column * point_row) → Bool
+    Value: (cell_column * cell_row) -> cell_value
+    n_cell: (cell_column * cell_row * cell_column * cell_row) -> Bool
+    e_cell: (cell_column * cell_row * cell_column * cell_row) -> Bool
+    w_cell: (cell_column * cell_row * cell_column * cell_row) -> Bool
+    s_cell: (cell_column * cell_row * cell_column * cell_row) -> Bool
+    nw_cp: (cell_column * cell_row * point_column * point_row) -> Bool
+    ne_cp: (cell_column * cell_row * point_column * point_row) -> Bool
+    sw_cp: (cell_column * cell_row * point_column * point_row) -> Bool
+    se_cp: (cell_column * cell_row * point_column * point_row) -> Bool
     
     // Points
-    n_point: (point_column * point_row * point_column * point_row) → Bool
-    e_point: (point_column * point_row * point_column * point_row) → Bool
-    s_point: (point_column * point_row * point_column * point_row) → Bool
-    w_point: (point_column * point_row * point_column * point_row) → Bool
-    nw_pc: (point_column * point_row * cell_column * cell_row) → Bool
-    ne_pc: (point_column * point_row * cell_column * cell_row) → Bool
-    sw_pc: (point_column * point_row * cell_column * cell_row) → Bool
-    se_pc: (point_column * point_row * cell_column * cell_row) → Bool
+    n_point: (point_column * point_row * point_column * point_row) -> Bool
+    e_point: (point_column * point_row * point_column * point_row) -> Bool
+    s_point: (point_column * point_row * point_column * point_row) -> Bool
+    w_point: (point_column * point_row * point_column * point_row) -> Bool
+    
+    neighbor_point: (point_column * point_row * point_column * point_row) -> Bool
+
+    nw_pc: (point_column * point_row * cell_column * cell_row) -> Bool
+    ne_pc: (point_column * point_row * cell_column * cell_row) -> Bool
+    sw_pc: (point_column * point_row * cell_column * cell_row) -> Bool
+    se_pc: (point_column * point_row * cell_column * cell_row) -> Bool
 
     // Lines
-    line: (point_column * point_row * point_column * point_row) → Bool
+    line: (point_column * point_row * point_column * point_row) -> Bool
 }
 
 theory T:V {
+    !x, x2 in point_column: !y, y2 in point_row: n_point(x, y, x2, y2) | e_point(x, y, x2, y2) | s_point(x, y, x2, y2) | w_point(x, y, x2, y2) -> neighbor_point(x, y, x2, y2).
+
     // 1. De lijnen moeten 1 doorlopende, niet kruisende kring vormen.
     //      - Uit elk punt start geen of 2 lijnen (Zorgt voor geen kruisingen)
     // 2. De value van elke cel komt overeen met het aantal omringende lijnen.
     //      - 
     // 3. Som all values = aantal lijnen
+   
 }
 
 structure S:V {
@@ -53,7 +59,7 @@ structure S:V {
     point_column := {1, 2, 3, 4}.
     point_row := {1, 2, 3, 4}.
     cell_value := {-1, 0, 1, 2, 3}.
-    Value := {(1, 1) → 0, (2, 1) → 2, (3, 1) → 3, (2, 2) → 2, (2, 3) → 1, (3, 3) → 2} else -1.
+    Value := {(1, 1) -> 0, (2, 1) -> 2, (3, 1) -> 3, (2, 2) -> 2, (2, 3) -> 1, (3, 3) -> 2} else -1.
     
     // cell relations, how one cell lies in relation to another
     n_cell := {(1, 2, 1, 1), (1, 3, 1, 2), (2, 2, 2, 1), (2, 3, 2, 2), (3, 2, 3, 1), (3, 3, 3, 2)}.
