@@ -32,15 +32,11 @@ vocabulary V {
 }
 
 theory T:V {
-    // !cols in cell_column: !rows in cell_row: (Value(cols, rows) ~= -1) => #{colsp1, colsp2 in point_column: !rowsp1, rowsp2 in point_row: (nw_cp(cols, rows, colsp1, rowsp1) & ne_cp(cols, rows, colsp2, rowsp2)) | (ne_cp(cols, rows, colsp1, rowsp1) & se_cp(cols, rows, colsp2, rowsp2)) | (se_cp(cols, rows, colsp1, rowsp1) & sw_cp(cols, rows, colsp2, rowsp2)) | (sw_cp(cols, rows, colsp1, rowsp1) & nw_cp(cols, rows, colsp2, rowsp2)) => line(colsp1, rowsp1, colsp2, rowsp2)} = (Value(cols, rows)). 
-    // itereer door alle punten 2 keer, indien twee punten rond deze cell, kijk of er een lijn is tussen twee punten
-
     // 1. De lijnen moeten 1 doorlopende, niet kruisende kring vormen.
     //      - Uit elk punt start geen of 2 lijnen (Zorgt voor geen kruisingen)
     // 2. De value van elke cel komt overeen met het aantal omringende lijnen.
     //      - 
-
-    
+    // 3. Som all values = aantal lijnen
 }
 
 structure S:V {
