@@ -40,16 +40,21 @@ vocabulary V {
 theory T:V {
     // Defines neighboring cells
     !x, x2 in cell_column: !y, y2 in cell_row: n_cell(x, y, x2, y2) | e_cell(x, y, x2, y2) | s_cell(x, y, x2, y2) | w_cell(x, y, x2, y2) <=> neighbor_cell(x, y, x2, y2).
+    
     // Defines neighboring points
     !x, x2 in point_column: !y, y2 in point_row: n_point(x, y, x2, y2) | e_point(x, y, x2, y2) | s_point(x, y, x2, y2) | w_point(x, y, x2, y2) <=> neighbor_point(x, y, x2, y2).
+    
     // Eliminates lines between not neighboring points
     !x, x2 in point_column: !y, y2 in point_row: ~neighbor_point(x, y, x2, y2) => ~line(x, y, x2, y2).
+    
+    // Out of every point starts 0 or 2 lines 
+    !x in point_column: !y in point_row: (#{x2 in point_column, y2 in point_row: line(x, y, x2, y2)} = 0) | (#{x2 in point_column, y2 in point_row: line(x, y, x2, y2)} = 2).
 
-    // 1. De lijnen moeten 1 doorlopende, niet kruisende kring vormen.
-    //      - Uit elk punt start geen of 2 lijnen (Zorgt voor geen kruisingen)
-    // 2. De value van elke cel komt overeen met het aantal omringende lijnen.
+    // [] 1. De lijnen moeten 1 doorlopende, niet kruisende kring vormen.
+    //      [X] - Uit elk punt start geen of 2 lijnen (Zorgt voor geen kruisingen) 
+    // [] 2. De value van elke cel komt overeen met het aantal omringende lijnen.
     //      - 
-    // 3. Som all values = aantal lijnen
+    // [] 3. Som all values = aantal lijnen
    
 }
 
