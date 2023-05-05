@@ -12,6 +12,9 @@ vocabulary V {
     e_cell: (cell_column * cell_row * cell_column * cell_row) -> Bool
     w_cell: (cell_column * cell_row * cell_column * cell_row) -> Bool
     s_cell: (cell_column * cell_row * cell_column * cell_row) -> Bool
+
+    neighbor_cell: (cell_column * cell_row * cell_column * cell_row) -> Bool
+
     nw_cp: (cell_column * cell_row * point_column * point_row) -> Bool
     ne_cp: (cell_column * cell_row * point_column * point_row) -> Bool
     sw_cp: (cell_column * cell_row * point_column * point_row) -> Bool
@@ -35,7 +38,8 @@ vocabulary V {
 }
 
 theory T:V {
-    !x, x2 in point_column: !y, y2 in point_row: n_point(x, y, x2, y2) | e_point(x, y, x2, y2) | s_point(x, y, x2, y2) | w_point(x, y, x2, y2) -> neighbor_point(x, y, x2, y2).
+    !x, x2 in cell_column: !y, y2 in cell_row: n_cell(x, y, x2, y2) | e_cell(x, y, x2, y2) | s_cell(x, y, x2, y2) | w_cell(x, y, x2, y2) <=> neighbor_cell(x, y, x2, y2).
+    !x, x2 in point_column: !y, y2 in point_row: n_point(x, y, x2, y2) | e_point(x, y, x2, y2) | s_point(x, y, x2, y2) | w_point(x, y, x2, y2) <=> neighbor_point(x, y, x2, y2).
 
     // 1. De lijnen moeten 1 doorlopende, niet kruisende kring vormen.
     //      - Uit elk punt start geen of 2 lijnen (Zorgt voor geen kruisingen)
