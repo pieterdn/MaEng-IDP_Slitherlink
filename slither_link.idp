@@ -75,7 +75,8 @@ theory T:V {
     }
 
     // connect everything only using 1 loop, #total amount of lines = #amount of lines in ã loop
-    !x, x2 in point_column: ?x3, x4 in point_column: !y, y2 in point_row: ?y3, y4 in point_row: line(x, y, x3, y3) &  line(x2, y2, x4, y4) => single_line(x, y, x2, y2).
+    //!x, x2 in point_column: ?x3, x4 in point_column: !y, y2 in point_row: ?y3, y4 in point_row: line(x, y, x3, y3) & line(x2, y2, x4, y4) <=> single_line(x, y, x2, y2).
+    ?x3 in point_column: ?y3 in point_row: #{x4 in point_column, y4 in point_row: single_line(x3, y3, x4, y4)} = #{x1, x2 in point_column, y1, y2 in point_row: line(x1, y1, x2, y2)}.
 
     // [] 1. De lijnen moeten 1 doorlopende, niet kruisende kring vormen.
     //      [X] - Uit elk punt start geen of 2 lijnen (Zorgt voor geen kruisingen) 
@@ -226,5 +227,5 @@ structure S31:V {
 }
 
 procedure main() {
-    pretty_print(model_expand(T, S31))
+    pretty_print(model_expand(T, S3, max = 3, timeout_seconds = 100000))
 }
